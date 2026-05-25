@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Makurama is a collection of changing video essays inspired by Sei Shonagon.">
+    <title>Makurama</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=IBM+Plex+Mono:wght@400;500;600&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <section id="intro-screen" role="region" aria-label="Introductory quote" tabindex="0">
+      <blockquote>
+        <p>Things that pass through a small screen and remain.</p>
+      </blockquote>
+    </section>
+
+    <header class="site-header">
+      <p class="lofi-mark">PAL / iPod / subtitles</p>
+      <h1 id="site-title" class="site-title">Makurama</h1>
+      <nav aria-label="Primary navigation">
+        <a href="info.html">Info</a>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section class="filter-section" aria-labelledby="filters-title">
+        <h2 id="filters-title" class="visually-hidden">Filter video essays by tag</h2>
+        <div id="tagFilters" class="tag-filters" role="list" aria-live="polite"></div>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-title">
+        <h2 id="gallery-title" class="visually-hidden">Video essays</h2>
+        <div id="gallery" class="gallery" aria-live="polite"></div>
+        <p id="galleryStatus" class="gallery-status" role="status"></p>
+      </section>
+
+      <section id="textFallback" class="text-fallback" aria-labelledby="text-fallback-title">
+        <h2 id="text-fallback-title">Text version</h2>
+        <p>Makurama can be browsed as a plain list of video essays. Each entry is prepared for captions and transcripts as the project grows.</p>
+        <ul>
+          <li><a href="assets/video/mornings-v1.mp4">Mornings</a>: Things I like, Fresh feelings.</li>
+          <li><a href="assets/video/commuting-v1.mp4">Commuting</a>: Things that pass by, City murmurs.</li>
+          <li><a href="assets/video/small-rooms-v1.mp4">Small Rooms</a>: Private corners, Quiet arrangements.</li>
+        </ul>
+      </section>
+    </main>
+
+    <div id="videoOverlay" class="video-overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" hidden>
+      <div class="overlay-plane" data-close-overlay></div>
+      <div class="video-dialog">
+        <button class="close-button" type="button" data-close-overlay aria-label="Close video">x</button>
+        <p id="overlayTagline" class="lofi-mark"></p>
+        <h2 id="overlayTitle"></h2>
+        <p id="overlayDescription" class="overlay-description"></p>
+        <div id="versionSwitcher" class="version-switcher" aria-label="Video versions"></div>
+        <video id="overlayVideo" controls playsinline preload="metadata">
+          <track kind="captions" srclang="en" label="English captions">
+        </video>
+        <p id="overlayTranscript" class="transcript-note"></p>
+      </div>
+    </div>
+
+    <noscript>
+      <section class="noscript-fallback" aria-labelledby="noscript-title">
+        <h2 id="noscript-title">Makurama without JavaScript</h2>
+        <p>The interactive gallery needs JavaScript. The first sample paths are listed here for text and script-free browsing.</p>
+        <ul>
+          <li><a href="assets/video/mornings-v1.mp4">Mornings</a></li>
+          <li><a href="assets/video/commuting-v1.mp4">Commuting</a></li>
+          <li><a href="assets/video/small-rooms-v1.mp4">Small Rooms</a></li>
+        </ul>
+      </section>
+    </noscript>
+  </body>
+</html>
