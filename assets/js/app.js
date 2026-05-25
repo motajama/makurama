@@ -1,9 +1,11 @@
+const ALL_TAG_ID = "__all";
+
 const state = {
   site: {},
   tags: [],
   tagMap: new Map(),
   videos: [],
-  activeTag: "All",
+  activeTag: ALL_TAG_ID,
   activeVideo: null,
   activeVersionIndex: 0,
   lastFocus: null
@@ -21,22 +23,32 @@ const overlayVideo = document.querySelector("#overlayVideo");
 const overlayTranscript = document.querySelector("#overlayTranscript");
 const versionSwitcher = document.querySelector("#versionSwitcher");
 const introScreen = document.getElementById("intro-screen");
+const introQuote = document.querySelector("#intro-quote");
+const introAuthor = document.querySelector("#intro-author");
+const skipLink = document.querySelector("#skip-link");
+const siteOwner = document.querySelector("#site-owner");
+const siteTitleText = document.querySelector("#site-title-text");
+const infoLink = document.querySelector("#info-link");
+const filtersTitle = document.querySelector("#filters-title");
+const galleryTitle = document.querySelector("#gallery-title");
+const textFallbackTitle = document.querySelector("#text-fallback-title");
+const textFallbackDescription = document.querySelector("#textFallbackDescription");
+const closeVideoButton = document.querySelector("#closeVideoButton");
+const footerBadges = document.querySelector("#footerBadges");
+const footerCredit = document.querySelector("#footerCredit");
 
 const textOnlyPattern = /Lynx|Links|w3m|ELinks/i;
+const INTRO_TRANSITION_FALLBACK_BUFFER_MS = 200;
 let introDismissed = false;
 let introTimer = 0;
 let introFallbackTimer = 0;
 
 init();
 
-function init() {
-  setupIntro();
-
+async function init() {
   if (textOnlyPattern.test(navigator.userAgent)) {
     document.documentElement.classList.add("text-only");
   }
-
-  loadVideos();
 
   overlay.addEventListener("click", (event) => {
     if (event.target.matches("[data-close-overlay]")) {
@@ -45,6 +57,8 @@ function init() {
   });
 
   document.addEventListener("keydown", handleKeys);
+  await loadVideos();
+  setupIntro();
 }
 
 function setupIntro() {
@@ -96,7 +110,10 @@ function dismissIntro() {
   }
 
   introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
-  introFallbackTimer = window.setTimeout(finishIntro, 2100);
+  introFallbackTimer = window.setTimeout(
+    finishIntro,
+    getTransitionFallbackMs(introScreen) + INTRO_TRANSITION_FALLBACK_BUFFER_MS
+  );
 }
 
 function handleIntroTransitionEnd(event) {
@@ -117,6 +134,23 @@ function finishIntro() {
   introScreen.hidden = true;
 }
 
+function getTransitionFallbackMs(element) {
+  const styles = window.getComputedStyle(element);
+  const durations = styles.transitionDuration.split(",").map(parseCssTime);
+  const delays = styles.transitionDelay.split(",").map(parseCssTime);
+  const totals = durations.map((duration, index) => duration + (delays[index] || delays[0] || 0));
+  return Math.max(...totals, 0);
+}
+
+function parseCssTime(value) {
+  const trimmed = value.trim();
+  const amount = Number.parseFloat(trimmed);
+  if (!Number.isFinite(amount)) {
+    return 0;
+  }
+  return trimmed.endsWith("ms") ? amount : amount * 1000;
+}
+
 async function loadVideos() {
   try {
     const response = await fetch("assets/data/videos.json");
@@ -129,19 +163,127 @@ async function loadVideos() {
     state.tags = Array.isArray(data.tags) ? data.tags : [];
     state.tagMap = new Map(state.tags.map((tag) => [tag.id, tag]));
     state.videos = Array.isArray(data.videos) ? data.videos : [];
+    renderSite();
     renderTags();
     renderGallery();
     renderTextFallback();
   } catch (error) {
-    galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
+    galleryStatus.textContent = getUi("load_error", "The video list could not be loaded. Use the text version below.");
     console.error(error);
   }
+}
+
+function renderSite() {
+  const title = state.site.title || "Makurama";
+  const ui = state.site.ui || {};
+  document.title = title;
+
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription && state.site.description) {
+    metaDescription.content = state.site.description;
+  }
+
+  if (siteOwner) {
+    siteOwner.textContent = state.site.owner || "";
+  }
+
+  if (siteTitleText) {
+    siteTitleText.textContent = title;
+  }
+
+  if (introQuote) {
+    introQuote.textContent = state.site.intro_quote || "";
+  }
+
+  if (introAuthor) {
+    introAuthor.textContent = state.site.intro_author || "";
+    introAuthor.hidden = !state.site.intro_author;
+  }
+
+  renderUiLabels(ui);
+
+  renderFooter();
+}
+
+function renderUiLabels(ui) {
+  setText(skipLink, ui.skip_link);
+  setText(infoLink, ui.info_link);
+  setText(filtersTitle, ui.filters_title);
+  setText(galleryTitle, ui.gallery_title);
+  setText(textFallbackTitle, ui.text_fallback_title);
+
+  if (introScreen && ui.intro_region_label) {
+    introScreen.setAttribute("aria-label", ui.intro_region_label);
+  }
+
+  const primaryNav = document.querySelector(".site-header nav");
+  if (primaryNav && ui.primary_navigation_label) {
+    primaryNav.setAttribute("aria-label", ui.primary_navigation_label);
+  }
+
+  if (closeVideoButton) {
+    closeVideoButton.textContent = ui.close_video_text || "x";
+    if (ui.close_video_label) {
+      closeVideoButton.setAttribute("aria-label", ui.close_video_label);
+    }
+  }
+
+  if (versionSwitcher && ui.video_versions_label) {
+    versionSwitcher.setAttribute("aria-label", ui.video_versions_label);
+  }
+
+  if (footerBadges && ui.footer_links_label) {
+    footerBadges.setAttribute("aria-label", ui.footer_links_label);
+  }
+}
+
+function setText(element, value) {
+  if (element && value) {
+    element.textContent = value;
+  }
+}
+
+function renderFooter() {
+  if (footerBadges) {
+    const links = Array.isArray(state.site.footer_links) ? state.site.footer_links : [];
+    footerBadges.replaceChildren(...links.map(createFooterBadge));
+  }
+
+  if (!footerCredit) {
+    return;
+  }
+
+  footerCredit.replaceChildren();
+  const credit = state.site.footer_credit || {};
+  if (!credit.href || !credit.label) {
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = credit.href;
+  link.textContent = credit.label;
+  footerCredit.append(link);
+}
+
+function createFooterBadge(item) {
+  const link = document.createElement("a");
+  link.href = item.href || "#";
+
+  const image = document.createElement("img");
+  image.src = item.badge || "";
+  image.alt = item.alt || "";
+  link.append(image);
+  return link;
 }
 
 function renderTags() {
   const usedTagIds = new Set(state.videos.flatMap((video) => video.tags || []));
   const tags = [
-    { id: "All", label: "All", description: "Show all video essays." },
+    {
+      id: ALL_TAG_ID,
+      label: getUi("all_tag_label", "All"),
+      description: getUi("all_tag_description", "Show all video essays.")
+    },
     ...state.tags.filter((tag) => usedTagIds.has(tag.id))
   ];
   tagFilters.replaceChildren(...tags.map(createTagButton));
@@ -167,12 +309,19 @@ function renderGallery() {
   const videos = getFilteredVideos();
   gallery.replaceChildren(...videos.map(createGalleryCard));
   galleryStatus.textContent = videos.length
-    ? `${videos.length} video essay${videos.length === 1 ? "" : "s"} shown.`
-    : "No video essays match this tag.";
+    ? formatUi(
+      "gallery_count",
+      {
+        count: videos.length,
+        plural: videos.length === 1 ? "" : "s"
+      },
+      `${videos.length} video essay${videos.length === 1 ? "" : "s"} shown.`
+    )
+    : getUi("gallery_empty", "No video essays match this tag.");
 }
 
 function getFilteredVideos() {
-  if (state.activeTag === "All") {
+  if (state.activeTag === ALL_TAG_ID) {
     return state.videos;
   }
   return state.videos.filter((video) => (video.tags || []).includes(state.activeTag));
@@ -185,7 +334,7 @@ function createGalleryCard(video) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "card-button";
-  button.setAttribute("aria-label", `Play ${video.title}`);
+  button.setAttribute("aria-label", formatUi("play_video_label", { title: video.title }, `Play ${video.title}`));
   button.addEventListener("click", () => openOverlay(video));
 
   const poster = document.createElement("img");
@@ -246,9 +395,18 @@ function renderOverlay() {
   overlayTagline.textContent = getOverlayMeta(video);
   overlayDescription.textContent = video.description;
   overlayTranscript.replaceChildren(
-    createMetaLine("Notes", version.notes || "Version notes are not available yet."),
-    createMetaLine("Transcript", version.transcript || "Transcript placeholder."),
-    createMetaLine("License", video.license || state.site.license_note || "License note unavailable.")
+    createMetaLine(
+      getUi("notes_label", "Notes"),
+      version.notes || getUi("notes_unavailable", "Version notes are not available yet.")
+    ),
+    createMetaLine(
+      getUi("transcript_label", "Transcript"),
+      version.transcript || getUi("transcript_unavailable", "Transcript placeholder.")
+    ),
+    createMetaLine(
+      getUi("license_label", "License"),
+      video.license || state.site.license_note || getUi("license_unavailable", "License note unavailable.")
+    )
   );
 
   renderOverlaySubtitle(video.subtitle || "");
@@ -315,7 +473,7 @@ function getCardMeta(video) {
     parts.push(video.status);
   }
   if (latest.date) {
-    parts.push(`latest ${latest.date}`);
+    parts.push(`${getUi("latest_label", "latest")} ${latest.date}`);
   }
   return parts.join(" / ") || video.description || "";
 }
@@ -325,13 +483,13 @@ function getOverlayMeta(video) {
   return [
     ...getTagLabels(video.tags),
     video.status,
-    latest.date ? `latest ${latest.date}` : ""
+    latest.date ? `${getUi("latest_label", "latest")} ${latest.date}` : ""
   ].filter(Boolean).join(" / ");
 }
 
 function getVersionLabel(version, index) {
   return [
-    version.label || `Version ${index + 1}`,
+    version.label || formatUi("version_fallback_label", { number: index + 1 }, `Version ${index + 1}`),
     version.date,
     version.duration,
     version.format
@@ -343,6 +501,10 @@ function renderTextFallback() {
     return;
   }
 
+  if (textFallbackDescription) {
+    textFallbackDescription.textContent = state.site.text_fallback || "";
+  }
+
   const list = document.createElement("ul");
   list.replaceChildren(...state.videos.map((video) => {
     const latest = getLatestVersion(video);
@@ -350,7 +512,7 @@ function renderTextFallback() {
     const link = document.createElement("a");
     link.href = latest.src || "#";
     link.textContent = video.title;
-    item.append(link, `: ${video.subtitle || video.description || "Video essay."}`);
+    item.append(link, `: ${video.subtitle || video.description || getUi("video_essay_fallback", "Video essay.")}`);
     return item;
   }));
 
@@ -415,4 +577,16 @@ function trapFocus(event) {
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getUi(key, fallback = "") {
+  return state.site.ui?.[key] || fallback;
+}
+
+function formatUi(key, values, fallback = "") {
+  const template = getUi(key, fallback);
+  return Object.entries(values).reduce(
+    (text, [name, value]) => text.replaceAll(`{${name}}`, value),
+    template
+  );
 }

@@ -1,11 +1,68 @@
 {
   "site": {
     "title": "Makurama",
-    "subtitle": "Changing video essays after Sei Shonagon",
-    "intro_quote": "Things that pass through a small screen and remain.",
-    "intro_author": "Makurama",
+    "subtitle": "",
+    "description": "Makurama is a collection of changing video essays inspired by Sei Shonagon.",
+    "owner": "Jan Motal's",
+    "intro_quote": "Persistent rain on the last day of the year.",
+    "intro_author": "Sei Shonagon",
     "base_url": "https://www.janmotal.cz/makurama/",
-    "license_note": "Code, interface, documentation, schema, and tools are MIT licensed. Videos, voice, subtitles, images, and artistic data are CC BY-NC-ND 4.0 unless stated otherwise."
+    "license_note": "Code, interface, documentation, schema, and tools are MIT licensed. Videos, voice, subtitles, images, and artistic data are CC BY-NC-ND 4.0 unless stated otherwise.",
+    "text_fallback": "Makurama can be browsed as a plain list of video essays. Each entry is prepared for captions and transcripts as the project grows.",
+    "ui": {
+      "skip_link": "Skip to content",
+      "intro_region_label": "Introductory quote",
+      "primary_navigation_label": "Primary navigation",
+      "info_link": "Info",
+      "filters_title": "Filter video essays by tag",
+      "gallery_title": "Video essays",
+      "text_fallback_title": "Text version",
+      "close_video_label": "Close video",
+      "close_video_text": "x",
+      "video_versions_label": "Video versions",
+      "footer_links_label": "Project links and licenses",
+      "all_tag_label": "All",
+      "all_tag_description": "Show all video essays.",
+      "load_error": "The video list could not be loaded. Use the text version below.",
+      "gallery_count": "{count} video essay{plural} shown.",
+      "gallery_empty": "No video essays match this tag.",
+      "play_video_label": "Play {title}",
+      "notes_label": "Notes",
+      "notes_unavailable": "Version notes are not available yet.",
+      "transcript_label": "Transcript",
+      "transcript_unavailable": "Transcript placeholder.",
+      "license_label": "License",
+      "license_unavailable": "License note unavailable.",
+      "latest_label": "latest",
+      "version_fallback_label": "Version {number}",
+      "video_essay_fallback": "Video essay."
+    },
+    "footer_links": [
+      {
+        "href": "https://github.com/motajama/makurama",
+        "badge": "https://img.shields.io/badge/source-GitHub-111111?style=flat-square&logo=github",
+        "alt": "Source on GitHub"
+      },
+      {
+        "href": "LICENSE",
+        "badge": "https://img.shields.io/badge/code-MIT-111111?style=flat-square",
+        "alt": "Code licensed MIT"
+      },
+      {
+        "href": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+        "badge": "https://img.shields.io/badge/art-CC%20BY--NC--ND%204.0-b11226?style=flat-square",
+        "alt": "Art licensed Creative Commons BY-NC-ND 4.0"
+      },
+      {
+        "href": "https://github.com/motajama/makurama",
+        "badge": "https://img.shields.io/badge/open--source-art-6f6f6f?style=flat-square",
+        "alt": "Open-source art static site"
+      }
+    ],
+    "footer_credit": {
+      "href": "https://www.janmotal.cz",
+      "label": "web&design->moj"
+    }
   },
   "tags": [
     {
