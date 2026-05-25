@@ -1,53 +1,158 @@
 {
+  "site": {
+    "title": "Makurama",
+    "subtitle": "Changing video essays after Sei Shonagon",
+    "intro_quote": "Things that pass through a small screen and remain.",
+    "intro_author": "Makurama",
+    "base_url": "https://www.janmotal.cz/makurama/",
+    "license_note": "Code, interface, documentation, schema, and tools are MIT licensed. Videos, voice, subtitles, images, and artistic data are CC BY-NC-ND 4.0 unless stated otherwise."
+  },
+  "tags": [
+    {
+      "id": "things-i-like",
+      "label": "Things I like",
+      "description": "Small attachments, bright preferences, and private pleasures."
+    },
+    {
+      "id": "fresh-feelings",
+      "label": "Fresh feelings",
+      "description": "Moments that arrive before they can be explained."
+    },
+    {
+      "id": "things-that-pass-by",
+      "label": "Things that pass by",
+      "description": "Views from transit, thresholds, and passing weather."
+    },
+    {
+      "id": "city-murmurs",
+      "label": "City murmurs",
+      "description": "Low urban sound, overheard systems, and public waiting."
+    },
+    {
+      "id": "private-corners",
+      "label": "Private corners",
+      "description": "Rooms, shelves, surfaces, and small domestic arrangements."
+    },
+    {
+      "id": "quiet-arrangements",
+      "label": "Quiet arrangements",
+      "description": "Objects and habits that make a room hold together."
+    },
+    {
+      "id": "heart-beats",
+      "label": "Things that make the heart beat faster",
+      "description": "Anticipation, embarrassment, delight, and sudden alertness."
+    }
+  ],
   "videos": [
     {
       "id": "mornings",
       "title": "Mornings",
+      "subtitle": "Pale kitchen light before speech",
+      "tags": ["things-i-like", "fresh-feelings"],
       "description": "A short list of pale kitchen sounds, small lamps, and the first messages left unread.",
+      "date_started": "2026-05-25",
+      "status": "open",
       "poster": "assets/poster/mornings.jpg",
-      "tags": ["Things I like", "Fresh feelings"],
+      "alt": "A low resolution morning interior still, reserved as placeholder artwork.",
+      "license": "CC BY-NC-ND 4.0",
       "versions": [
         {
           "id": "mornings-v1",
           "label": "PAL version 1",
           "date": "2026-05-25",
           "src": "assets/video/mornings-v1.mp4",
-          "captions": "assets/video/mornings-v1.vtt",
-          "transcript": "Transcript placeholder for Mornings."
+          "duration": "02:18",
+          "format": "PAL 4:3 MP4, hardcoded subtitles",
+          "notes": "First arrangement, built from iPod footage and a soft chiptune line.",
+          "transcript": "Transcript placeholder for Mornings.",
+          "subtitles": "assets/video/mornings-v1.vtt"
         }
       ]
     },
     {
       "id": "commuting",
       "title": "Commuting",
+      "subtitle": "Windows, rails, and announcements",
+      "tags": ["things-that-pass-by", "city-murmurs"],
       "description": "Windows, station tiles, delay announcements, and things that briefly become scenery.",
+      "date_started": "2026-05-25",
+      "status": "changing",
       "poster": "assets/poster/commuting.jpg",
-      "tags": ["Things that pass by", "City murmurs"],
+      "alt": "A low resolution transit still, reserved as placeholder artwork.",
+      "license": "CC BY-NC-ND 4.0",
       "versions": [
         {
           "id": "commuting-v1",
           "label": "PAL version 1",
           "date": "2026-05-25",
           "src": "assets/video/commuting-v1.mp4",
-          "captions": "assets/video/commuting-v1.vtt",
-          "transcript": "Transcript placeholder for Commuting."
+          "duration": "03:04",
+          "format": "PAL 4:3 MP4, hardcoded subtitles",
+          "notes": "Initial public transport cut with voice and platform room tone.",
+          "transcript": "Transcript placeholder for Commuting.",
+          "subtitles": "assets/video/commuting-v1.vtt"
+        },
+        {
+          "id": "commuting-v2",
+          "label": "Station edit",
+          "date": "2026-06-08",
+          "src": "assets/video/commuting-v2.mp4",
+          "duration": "03:27",
+          "format": "PAL 4:3 MP4, hardcoded subtitles",
+          "notes": "Placeholder for a later edit with more station tile footage.",
+          "transcript": "Transcript placeholder for the station edit of Commuting.",
+          "subtitles": "assets/video/commuting-v2.vtt"
         }
       ]
     },
     {
       "id": "small-rooms",
       "title": "Small Rooms",
+      "subtitle": "A shelf, a corner, a screen reflection",
+      "tags": ["private-corners", "quiet-arrangements"],
       "description": "Corners, shelf dust, reflected screens, and the comfort of a room that is almost too narrow.",
+      "date_started": "2026-05-25",
+      "status": "open",
       "poster": "assets/poster/small-rooms.jpg",
-      "tags": ["Private corners", "Quiet arrangements"],
+      "alt": "A low resolution room corner still, reserved as placeholder artwork.",
+      "license": "CC BY-NC-ND 4.0",
       "versions": [
         {
           "id": "small-rooms-v1",
           "label": "PAL version 1",
           "date": "2026-05-25",
           "src": "assets/video/small-rooms-v1.mp4",
-          "captions": "assets/video/small-rooms-v1.vtt",
-          "transcript": "Transcript placeholder for Small Rooms."
+          "duration": "02:42",
+          "format": "PAL 4:3 MP4, hardcoded subtitles",
+          "notes": "First room study, quiet voice and almost no movement.",
+          "transcript": "Transcript placeholder for Small Rooms.",
+          "subtitles": "assets/video/small-rooms-v1.vtt"
+        }
+      ]
+    },
+    {
+      "id": "heart-beat-faster",
+      "title": "Things That Make the Heart Beat Faster",
+      "subtitle": "A list of sudden inner weather",
+      "tags": ["heart-beats", "fresh-feelings"],
+      "description": "A changing list of tiny shocks: a message preview, a corridor voice, a hand nearly touching another hand.",
+      "date_started": "2026-06-12",
+      "status": "open",
+      "poster": "assets/poster/heart-beat-faster.jpg",
+      "alt": "A low resolution red-accented still, reserved as placeholder artwork.",
+      "license": "CC BY-NC-ND 4.0",
+      "versions": [
+        {
+          "id": "heart-beat-faster-v1",
+          "label": "List draft",
+          "date": "2026-06-12",
+          "src": "assets/video/heart-beat-faster-v1.mp4",
+          "duration": "01:55",
+          "format": "PAL 4:3 MP4, hardcoded subtitles",
+          "notes": "Placeholder first version for a list-form essay.",
+          "transcript": "Transcript placeholder for Things That Make the Heart Beat Faster.",
+          "subtitles": "assets/video/heart-beat-faster-v1.vtt"
         }
       ]
     }

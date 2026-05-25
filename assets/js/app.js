@@ -1,4 +1,7 @@
 const state = {
+  site: {},
+  tags: [],
+  tagMap: new Map(),
   videos: [],
   activeTag: "All",
   activeVideo: null,
@@ -122,9 +125,13 @@ async function loadVideos() {
     }
 
     const data = await response.json();
+    state.site = data.site || {};
+    state.tags = Array.isArray(data.tags) ? data.tags : [];
+    state.tagMap = new Map(state.tags.map((tag) => [tag.id, tag]));
     state.videos = Array.isArray(data.videos) ? data.videos : [];
     renderTags();
     renderGallery();
+    renderTextFallback();
   } catch (error) {
     galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
     console.error(error);
@@ -132,7 +139,11 @@ async function loadVideos() {
 }
 
 function renderTags() {
-  const tags = ["All", ...new Set(state.videos.flatMap((video) => video.tags || []))];
+  const usedTagIds = new Set(state.videos.flatMap((video) => video.tags || []));
+  const tags = [
+    { id: "All", label: "All", description: "Show all video essays." },
+    ...state.tags.filter((tag) => usedTagIds.has(tag.id))
+  ];
   tagFilters.replaceChildren(...tags.map(createTagButton));
 }
 
@@ -140,11 +151,12 @@ function createTagButton(tag) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "tag-button";
-  button.textContent = tag;
+  button.textContent = tag.label;
+  button.title = tag.description || tag.label;
   button.setAttribute("role", "listitem");
-  button.setAttribute("aria-pressed", String(tag === state.activeTag));
+  button.setAttribute("aria-pressed", String(tag.id === state.activeTag));
   button.addEventListener("click", () => {
-    state.activeTag = tag;
+    state.activeTag = tag.id;
     renderTags();
     renderGallery();
   });
@@ -178,7 +190,7 @@ function createGalleryCard(video) {
 
   const poster = document.createElement("img");
   poster.src = video.poster;
-  poster.alt = "";
+  poster.alt = video.alt || "";
   poster.loading = "lazy";
   poster.addEventListener("error", () => {
     poster.removeAttribute("src");
@@ -192,15 +204,23 @@ function createGalleryCard(video) {
   title.className = "card-title";
   title.textContent = video.title;
 
+  const subtitle = document.createElement("span");
+  subtitle.className = "card-subtitle";
+  subtitle.textContent = video.subtitle || "";
+
   const description = document.createElement("span");
   description.className = "card-description";
-  description.textContent = video.description;
+  description.textContent = getCardMeta(video);
 
   const tags = document.createElement("span");
   tags.className = "card-tags";
-  tags.textContent = (video.tags || []).join(" / ");
+  tags.textContent = getTagLabels(video.tags).join(" / ");
 
-  content.append(title, description, tags);
+  content.append(title);
+  if (video.subtitle) {
+    content.append(subtitle);
+  }
+  content.append(description, tags);
   button.append(poster, content);
   card.append(button);
   return card;
@@ -219,18 +239,25 @@ function openOverlay(video, versionIndex = 0) {
 
 function renderOverlay() {
   const video = state.activeVideo;
-  const version = video.versions[state.activeVersionIndex];
+  const versions = Array.isArray(video.versions) ? video.versions : [];
+  const version = versions[state.activeVersionIndex] || {};
 
   overlayTitle.textContent = video.title;
-  overlayTagline.textContent = (video.tags || []).join(" / ");
+  overlayTagline.textContent = getOverlayMeta(video);
   overlayDescription.textContent = video.description;
-  overlayTranscript.textContent = version.transcript || "Transcript placeholder.";
+  overlayTranscript.replaceChildren(
+    createMetaLine("Notes", version.notes || "Version notes are not available yet."),
+    createMetaLine("Transcript", version.transcript || "Transcript placeholder."),
+    createMetaLine("License", video.license || state.site.license_note || "License note unavailable.")
+  );
 
-  versionSwitcher.replaceChildren(...video.versions.map((item, index) => {
+  renderOverlaySubtitle(video.subtitle || "");
+
+  versionSwitcher.replaceChildren(...versions.map((item, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "version-button";
-    button.textContent = item.label || `Version ${index + 1}`;
+    button.textContent = getVersionLabel(item, index);
     button.setAttribute("aria-pressed", String(index === state.activeVersionIndex));
     button.addEventListener("click", () => {
       state.activeVersionIndex = index;
@@ -240,13 +267,99 @@ function renderOverlay() {
   }));
 
   overlayVideo.pause();
-  overlayVideo.src = version.src;
+  if (version.src) {
+    overlayVideo.src = version.src;
+  } else {
+    overlayVideo.removeAttribute("src");
+  }
   overlayVideo.poster = video.poster;
   const track = overlayVideo.querySelector("track");
   if (track) {
-    track.src = version.captions || "";
+    track.src = version.subtitles || "";
   }
   overlayVideo.load();
+}
+
+function renderOverlaySubtitle(text) {
+  let subtitle = document.querySelector("#overlaySubtitle");
+  if (!subtitle) {
+    subtitle = document.createElement("p");
+    subtitle.id = "overlaySubtitle";
+    subtitle.className = "overlay-subtitle";
+    overlayTitle.after(subtitle);
+  }
+  subtitle.textContent = text;
+  subtitle.hidden = !text;
+}
+
+function createMetaLine(label, value) {
+  const line = document.createElement("span");
+  line.className = "meta-line";
+  line.textContent = `${label}: ${value}`;
+  return line;
+}
+
+function getTagLabels(tagIds = []) {
+  return tagIds.map((id) => state.tagMap.get(id)?.label || id);
+}
+
+function getLatestVersion(video) {
+  const versions = Array.isArray(video.versions) ? video.versions : [];
+  return versions[versions.length - 1] || {};
+}
+
+function getCardMeta(video) {
+  const latest = getLatestVersion(video);
+  const parts = [];
+  if (video.status) {
+    parts.push(video.status);
+  }
+  if (latest.date) {
+    parts.push(`latest ${latest.date}`);
+  }
+  return parts.join(" / ") || video.description || "";
+}
+
+function getOverlayMeta(video) {
+  const latest = getLatestVersion(video);
+  return [
+    ...getTagLabels(video.tags),
+    video.status,
+    latest.date ? `latest ${latest.date}` : ""
+  ].filter(Boolean).join(" / ");
+}
+
+function getVersionLabel(version, index) {
+  return [
+    version.label || `Version ${index + 1}`,
+    version.date,
+    version.duration,
+    version.format
+  ].filter(Boolean).join(" / ");
+}
+
+function renderTextFallback() {
+  if (!textFallback || !state.videos.length) {
+    return;
+  }
+
+  const list = document.createElement("ul");
+  list.replaceChildren(...state.videos.map((video) => {
+    const latest = getLatestVersion(video);
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = latest.src || "#";
+    link.textContent = video.title;
+    item.append(link, `: ${video.subtitle || video.description || "Video essay."}`);
+    return item;
+  }));
+
+  const existingList = textFallback.querySelector("ul");
+  if (existingList) {
+    existingList.replaceWith(list);
+  } else {
+    textFallback.append(list);
+  }
 }
 
 function closeOverlay() {

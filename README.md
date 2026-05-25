@@ -36,3 +36,13 @@ CC BY-NC-ND 4.0 unless stated otherwise.
 - `assets/js/app.js` — gallery, filtering, video overlay
 - `tools/` — video processing tools
 - `docs/` — notes and documentation
+
+## Video data
+
+`assets/data/videos.json` is the content source for the static frontend. It contains:
+
+- `site` — title, subtitle, intro quote, canonical base URL, and licensing note
+- `tags` — stable tag ids with display labels and short descriptions
+- `videos` — essay records with status, poster metadata, license, and version history
+
+Video `status` should be one of `open`, `changing`, or `closed`. Version records carry the media path, date, duration, format, notes, transcript text, and subtitle path. Media files may be placeholders until the corresponding video assets exist.

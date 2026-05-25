@@ -316,6 +316,14 @@ main {
   line-height: 1.55;
 }
 
+.card-subtitle,
+.overlay-subtitle {
+  color: var(--muted);
+  font-family: var(--ui-font);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .card-tags,
 .gallery-status,
 .transcript-note,
@@ -419,6 +427,10 @@ main {
   margin: 0;
   color: var(--muted);
   line-height: 1.7;
+}
+
+.meta-line {
+  display: block;
 }
 
 .video-dialog video {
