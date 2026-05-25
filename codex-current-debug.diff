@@ -1,0 +1,922 @@
+diff --git a/assets/css/style.css b/assets/css/style.css
+index e69de29..84a0d97 100644
+--- a/assets/css/style.css
++++ b/assets/css/style.css
+@@ -0,0 +1,436 @@
++:root {
++  --paper: #fff;
++  --ink: #111;
++  --muted: #6f6f6f;
++  --line: #d7d7d7;
++  --soft: #f3f3f3;
++  --red: #b11226;
++  --focus: #b11226;
++  --title-font: "Shippori Mincho", "Times New Roman", serif;
++  --ui-font: "IBM Plex Mono", "Courier New", monospace;
++  --accent-font: "DotGothic16", "IBM Plex Mono", monospace;
++}
++
++* {
++  box-sizing: border-box;
++}
++
++html,
++body {
++  cursor: auto;
++}
++
++html {
++  background: var(--paper);
++  color: var(--ink);
++  font-family: var(--ui-font);
++  font-size: 16px;
++}
++
++body {
++  margin: 0;
++  min-height: 100vh;
++}
++
++body.intro-active {
++  overflow: hidden;
++}
++
++body.overlay-open {
++  overflow: hidden;
++}
++
++a {
++  color: inherit;
++  text-decoration-color: var(--red);
++  text-decoration-thickness: 1px;
++  text-underline-offset: 0.18em;
++}
++
++a,
++button,
++.card-button,
++[role="button"] {
++  cursor: pointer;
++}
++
++button,
++video {
++  font: inherit;
++}
++
++button {
++  color: inherit;
++}
++
++:focus-visible {
++  outline: 2px solid var(--focus);
++  outline-offset: 4px;
++}
++
++.visually-hidden {
++  position: absolute;
++  width: 1px;
++  height: 1px;
++  padding: 0;
++  margin: -1px;
++  overflow: hidden;
++  clip: rect(0, 0, 0, 0);
++  white-space: nowrap;
++  border: 0;
++}
++
++.skip-link {
++  position: fixed;
++  left: 1rem;
++  top: 1rem;
++  z-index: 10000;
++  padding: 0.65rem 0.85rem;
++  background: var(--paper);
++  border: 1px solid var(--ink);
++  transform: translateY(-180%);
++}
++
++.skip-link:focus {
++  transform: translateY(0);
++}
++
++#intro-screen {
++  position: fixed;
++  inset: 0;
++  z-index: 9999;
++  display: grid;
++  place-items: center;
++  padding: 1.5rem;
++  background: var(--paper);
++  color: var(--ink);
++  opacity: 1;
++  visibility: visible;
++  pointer-events: auto;
++  cursor: pointer;
++  transition: opacity 1200ms ease;
++}
++
++#intro-screen.intro-dismissing {
++  opacity: 0;
++  pointer-events: none;
++}
++
++#intro-screen[hidden],
++.video-overlay[hidden] {
++  display: none !important;
++}
++
++#intro-screen blockquote {
++  margin: 0;
++}
++
++#intro-screen p {
++  max-width: 18rem;
++  margin: 0;
++  color: var(--muted);
++  font-family: var(--title-font);
++  font-size: clamp(1.25rem, 4vw, 2.2rem);
++  line-height: 1.35;
++  text-align: center;
++}
++
++.site-header {
++  display: grid;
++  place-items: center;
++  gap: 1rem;
++  padding: 2rem 1.25rem 2.5rem;
++  text-align: center;
++  background: transparent;
++}
++
++.site-title,
++.site-title:focus,
++.site-title:active,
++.site-title:focus-visible,
++.site-header h1,
++.site-header h1:focus,
++.site-header h1:active,
++.site-header h1:focus-visible {
++  color: var(--ink);
++  background: transparent;
++}
++
++.site-title {
++  margin: 0;
++  font-family: var(--title-font);
++  font-size: clamp(4.4rem, 16vw, 12rem);
++  font-weight: 500;
++  line-height: 0.9;
++  letter-spacing: 0;
++  text-transform: none;
++}
++
++.site-title:focus,
++.site-title:focus-visible {
++  outline: 1px solid var(--focus);
++  outline-offset: 0.35rem;
++}
++
++.site-header nav {
++  font-size: 0.82rem;
++  text-transform: uppercase;
++}
++
++.lofi-mark {
++  margin: 0;
++  color: var(--red);
++  background: transparent;
++  font-family: var(--accent-font);
++  font-size: 0.82rem;
++  letter-spacing: 0;
++}
++
++main {
++  padding: 0 1.25rem 5rem;
++}
++
++.filter-section {
++  max-width: 66rem;
++  margin: 0 auto 2rem;
++}
++
++.tag-filters,
++.version-switcher {
++  display: flex;
++  flex-wrap: wrap;
++  justify-content: center;
++  gap: 0.55rem;
++}
++
++.tag-button,
++.version-button,
++.close-button {
++  min-height: 2.5rem;
++  border: 1px solid var(--line);
++  background: var(--paper);
++}
++
++.tag-button,
++.version-button {
++  padding: 0.55rem 0.8rem;
++  font-size: 0.78rem;
++  text-transform: uppercase;
++}
++
++.tag-button[aria-pressed="true"],
++.version-button[aria-pressed="true"] {
++  border-color: var(--red);
++  color: var(--red);
++}
++
++.gallery-section {
++  max-width: 74rem;
++  margin: 0 auto;
++}
++
++.gallery {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
++  gap: 1px;
++  border: 1px solid var(--line);
++  background: var(--line);
++}
++
++.gallery-card {
++  min-height: 24rem;
++  background: var(--paper);
++}
++
++.card-button {
++  display: grid;
++  grid-template-rows: minmax(12rem, 1fr) auto;
++  width: 100%;
++  min-height: 24rem;
++  padding: 0;
++  border: 0;
++  background: var(--paper);
++  text-align: left;
++}
++
++.card-button:hover .card-title,
++.card-button:focus-visible .card-title {
++  color: var(--red);
++}
++
++.card-button img {
++  width: 100%;
++  height: 100%;
++  min-height: 12rem;
++  object-fit: cover;
++  background:
++    linear-gradient(90deg, transparent 49%, rgba(0, 0, 0, 0.05) 50%, transparent 51%),
++    var(--soft);
++  border-bottom: 1px solid var(--line);
++  filter: grayscale(1);
++}
++
++.card-button img.is-missing {
++  border: 0;
++  color: transparent;
++}
++
++.card-content {
++  display: grid;
++  gap: 0.8rem;
++  padding: 1rem;
++}
++
++.card-title {
++  font-family: var(--title-font);
++  font-size: 1.8rem;
++  line-height: 1.1;
++}
++
++.card-description {
++  color: var(--muted);
++  font-size: 0.9rem;
++  line-height: 1.55;
++}
++
++.card-tags,
++.gallery-status,
++.transcript-note,
++.noscript-fallback,
++.text-fallback {
++  color: var(--muted);
++  font-size: 0.78rem;
++  line-height: 1.7;
++}
++
++.card-tags {
++  color: var(--red);
++  font-family: var(--accent-font);
++}
++
++.gallery-status {
++  margin: 1rem 0 0;
++  text-align: center;
++}
++
++.text-fallback {
++  display: none;
++  max-width: 38rem;
++  margin: 4rem auto 0;
++  border-top: 1px solid var(--line);
++  padding-top: 1.5rem;
++}
++
++.text-only .text-fallback {
++  display: block;
++}
++
++.video-overlay {
++  position: fixed;
++  inset: 0;
++  z-index: 10;
++  display: grid;
++  place-items: center;
++  padding: 1rem;
++  opacity: 0;
++  visibility: hidden;
++  pointer-events: none;
++  transition: opacity 260ms ease;
++}
++
++.video-overlay.is-visible {
++  opacity: 1;
++  visibility: visible;
++  pointer-events: auto;
++}
++
++.overlay-plane {
++  position: absolute;
++  inset: 0;
++  background: rgba(255, 255, 255, 0.96);
++}
++
++.video-dialog {
++  position: relative;
++  z-index: 1;
++  width: min(100%, 58rem);
++  max-height: calc(100vh - 2rem);
++  overflow: auto;
++  display: grid;
++  gap: 1rem;
++  justify-items: center;
++  padding: clamp(1rem, 4vw, 2.5rem);
++  background: var(--paper);
++  border: 1px solid var(--line);
++  text-align: center;
++  transform: translateY(0.5rem);
++  transition: transform 260ms ease;
++}
++
++.video-overlay.is-visible .video-dialog {
++  transform: translateY(0);
++}
++
++.close-button {
++  position: absolute;
++  right: 0.75rem;
++  top: 0.75rem;
++  width: 2.5rem;
++  padding: 0;
++  color: var(--red);
++  font-family: var(--accent-font);
++  font-size: 1rem;
++}
++
++.video-dialog h2 {
++  margin: 0;
++  font-family: var(--title-font);
++  font-size: clamp(2.4rem, 8vw, 5.5rem);
++  font-weight: 500;
++  line-height: 1;
++}
++
++.overlay-description {
++  max-width: 38rem;
++  margin: 0;
++  color: var(--muted);
++  line-height: 1.7;
++}
++
++.video-dialog video {
++  width: min(100%, 44rem);
++  aspect-ratio: 4 / 3;
++  background: var(--ink);
++}
++
++.noscript-fallback {
++  max-width: 38rem;
++  margin: 3rem auto;
++  padding: 1rem;
++  border: 1px solid var(--line);
++}
++
++@media (max-width: 640px) {
++  .site-title {
++    font-size: clamp(4rem, 22vw, 7rem);
++  }
++
++  .gallery-card,
++  .card-button {
++    min-height: 21rem;
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  #intro-screen {
++    transition-duration: 80ms;
++  }
++
++  *,
++  *::before,
++  *::after {
++    scroll-behavior: auto !important;
++    animation-duration: 0.001ms !important;
++    animation-iteration-count: 1 !important;
++  }
++}
+diff --git a/assets/data/videos.json b/assets/data/videos.json
+index e69de29..d60d2a1 100644
+--- a/assets/data/videos.json
++++ b/assets/data/videos.json
+@@ -0,0 +1,55 @@
++{
++  "videos": [
++    {
++      "id": "mornings",
++      "title": "Mornings",
++      "description": "A short list of pale kitchen sounds, small lamps, and the first messages left unread.",
++      "poster": "assets/poster/mornings.jpg",
++      "tags": ["Things I like", "Fresh feelings"],
++      "versions": [
++        {
++          "id": "mornings-v1",
++          "label": "PAL version 1",
++          "date": "2026-05-25",
++          "src": "assets/video/mornings-v1.mp4",
++          "captions": "assets/video/mornings-v1.vtt",
++          "transcript": "Transcript placeholder for Mornings."
++        }
++      ]
++    },
++    {
++      "id": "commuting",
++      "title": "Commuting",
++      "description": "Windows, station tiles, delay announcements, and things that briefly become scenery.",
++      "poster": "assets/poster/commuting.jpg",
++      "tags": ["Things that pass by", "City murmurs"],
++      "versions": [
++        {
++          "id": "commuting-v1",
++          "label": "PAL version 1",
++          "date": "2026-05-25",
++          "src": "assets/video/commuting-v1.mp4",
++          "captions": "assets/video/commuting-v1.vtt",
++          "transcript": "Transcript placeholder for Commuting."
++        }
++      ]
++    },
++    {
++      "id": "small-rooms",
++      "title": "Small Rooms",
++      "description": "Corners, shelf dust, reflected screens, and the comfort of a room that is almost too narrow.",
++      "poster": "assets/poster/small-rooms.jpg",
++      "tags": ["Private corners", "Quiet arrangements"],
++      "versions": [
++        {
++          "id": "small-rooms-v1",
++          "label": "PAL version 1",
++          "date": "2026-05-25",
++          "src": "assets/video/small-rooms-v1.mp4",
++          "captions": "assets/video/small-rooms-v1.vtt",
++          "transcript": "Transcript placeholder for Small Rooms."
++        }
++      ]
++    }
++  ]
++}
+diff --git a/assets/js/app.js b/assets/js/app.js
+index e69de29..ca481cf 100644
+--- a/assets/js/app.js
++++ b/assets/js/app.js
+@@ -0,0 +1,330 @@
++const state = {
++  videos: [],
++  activeTag: "All",
++  activeVideo: null,
++  activeVersionIndex: 0,
++  lastFocus: null
++};
++
++const tagFilters = document.querySelector("#tagFilters");
++const gallery = document.querySelector("#gallery");
++const galleryStatus = document.querySelector("#galleryStatus");
++const overlay = document.querySelector("#videoOverlay");
++const overlayTitle = document.querySelector("#overlayTitle");
++const overlayTagline = document.querySelector("#overlayTagline");
++const overlayDescription = document.querySelector("#overlayDescription");
++const overlayVideo = document.querySelector("#overlayVideo");
++const overlayTranscript = document.querySelector("#overlayTranscript");
++const versionSwitcher = document.querySelector("#versionSwitcher");
++const introScreen = document.getElementById("intro-screen");
++const mainContent = document.getElementById("main");
++
++const textOnlyPattern = /Lynx|Links|w3m|ELinks/i;
++let introDismissed = false;
++let introTimer = 0;
++let introFallbackTimer = 0;
++
++init();
++
++function init() {
++  setupIntro();
++  setupVideoOverlay();
++
++  if (textOnlyPattern.test(navigator.userAgent)) {
++    document.documentElement.classList.add("text-only");
++  }
++
++  loadVideos();
++  document.addEventListener("keydown", handleKeys);
++}
++
++function setupIntro() {
++  if (!introScreen) {
++    document.body.classList.remove("intro-active");
++    return;
++  }
++
++  document.body.classList.add("intro-active");
++  introScreen.hidden = false;
++  introScreen.classList.remove("intro-dismissing");
++  introScreen.style.pointerEvents = "";
++  introScreen.focus({ preventScroll: true });
++  introScreen.addEventListener("click", dismissIntro);
++  introScreen.addEventListener("keydown", handleIntroKeys);
++  introTimer = window.setTimeout(dismissIntro, 4000);
++}
++
++function handleIntroKeys(event) {
++  if (!["Enter", " ", "Escape"].includes(event.key)) {
++    return;
++  }
++
++  event.preventDefault();
++  dismissIntro();
++}
++
++function dismissIntro() {
++  if (!introScreen || introDismissed) {
++    return;
++  }
++
++  introDismissed = true;
++  window.clearTimeout(introTimer);
++  window.clearTimeout(introFallbackTimer);
++  document.body.classList.remove("intro-active");
++  introScreen.classList.add("intro-dismissing");
++  introScreen.style.pointerEvents = "none";
++  introScreen.removeEventListener("click", dismissIntro);
++  introScreen.removeEventListener("keydown", handleIntroKeys);
++
++  if (mainContent) {
++    mainContent.focus({ preventScroll: true });
++  }
++
++  introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
++  introFallbackTimer = window.setTimeout(finishIntro, prefersReducedMotion() ? 180 : 1500);
++}
++
++function handleIntroTransitionEnd(event) {
++  if (event.target !== introScreen || event.propertyName !== "opacity") {
++    return;
++  }
++
++  finishIntro();
++}
++
++function finishIntro() {
++  if (!introScreen) {
++    return;
++  }
++
++  window.clearTimeout(introFallbackTimer);
++  introScreen.removeEventListener("transitionend", handleIntroTransitionEnd);
++  introScreen.hidden = true;
++}
++
++async function loadVideos() {
++  try {
++    const response = await fetch("assets/data/videos.json");
++    if (!response.ok) {
++      throw new Error(`Video data failed to load: ${response.status}`);
++    }
++
++    const data = await response.json();
++    state.videos = Array.isArray(data.videos) ? data.videos : [];
++    renderTags();
++    renderGallery();
++  } catch (error) {
++    if (galleryStatus) {
++      galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
++    }
++    console.error(error);
++  }
++}
++
++function setupVideoOverlay() {
++  if (!overlay) {
++    return;
++  }
++
++  overlay.hidden = true;
++  overlay.classList.remove("is-visible");
++  overlay.addEventListener("click", (event) => {
++    if (event.target.matches("[data-close-overlay]")) {
++      closeOverlay();
++    }
++  });
++}
++
++function renderTags() {
++  if (!tagFilters) {
++    return;
++  }
++
++  const tags = ["All", ...new Set(state.videos.flatMap((video) => video.tags || []))];
++  tagFilters.replaceChildren(...tags.map(createTagButton));
++}
++
++function createTagButton(tag) {
++  const button = document.createElement("button");
++  button.type = "button";
++  button.className = "tag-button";
++  button.textContent = tag;
++  button.setAttribute("role", "listitem");
++  button.setAttribute("aria-pressed", String(tag === state.activeTag));
++  button.addEventListener("click", () => {
++    state.activeTag = tag;
++    renderTags();
++    renderGallery();
++  });
++  return button;
++}
++
++function renderGallery() {
++  if (!gallery) {
++    return;
++  }
++
++  const videos = getFilteredVideos();
++  gallery.replaceChildren(...videos.map(createGalleryCard));
++  if (galleryStatus) {
++    galleryStatus.textContent = videos.length
++      ? `${videos.length} video essay${videos.length === 1 ? "" : "s"} shown.`
++      : "No video essays match this tag.";
++  }
++}
++
++function getFilteredVideos() {
++  if (state.activeTag === "All") {
++    return state.videos;
++  }
++  return state.videos.filter((video) => (video.tags || []).includes(state.activeTag));
++}
++
++function createGalleryCard(video) {
++  const card = document.createElement("article");
++  card.className = "gallery-card";
++
++  const button = document.createElement("button");
++  button.type = "button";
++  button.className = "card-button";
++  button.setAttribute("aria-label", `Play ${video.title}`);
++  button.addEventListener("click", () => openOverlay(video));
++
++  const poster = document.createElement("img");
++  poster.src = video.poster;
++  poster.alt = "";
++  poster.loading = "lazy";
++  poster.addEventListener("error", () => {
++    poster.removeAttribute("src");
++    poster.classList.add("is-missing");
++  });
++
++  const content = document.createElement("span");
++  content.className = "card-content";
++
++  const title = document.createElement("span");
++  title.className = "card-title";
++  title.textContent = video.title;
++
++  const description = document.createElement("span");
++  description.className = "card-description";
++  description.textContent = video.description;
++
++  const tags = document.createElement("span");
++  tags.className = "card-tags";
++  tags.textContent = (video.tags || []).join(" / ");
++
++  content.append(title, description, tags);
++  button.append(poster, content);
++  card.append(button);
++  return card;
++}
++
++function openOverlay(video, versionIndex = 0) {
++  if (!overlay) {
++    return;
++  }
++
++  state.lastFocus = document.activeElement;
++  state.activeVideo = video;
++  state.activeVersionIndex = versionIndex;
++  renderOverlay();
++  overlay.hidden = false;
++  document.body.classList.add("overlay-open");
++  requestAnimationFrame(() => {
++    overlay.classList.add("is-visible");
++  });
++  overlay.querySelector(".close-button")?.focus();
++}
++
++function renderOverlay() {
++  const video = state.activeVideo;
++  const version = video.versions[state.activeVersionIndex];
++
++  overlayTitle.textContent = video.title;
++  overlayTagline.textContent = (video.tags || []).join(" / ");
++  overlayDescription.textContent = video.description;
++  overlayTranscript.textContent = version.transcript || "Transcript placeholder.";
++
++  versionSwitcher.replaceChildren(...video.versions.map((item, index) => {
++    const button = document.createElement("button");
++    button.type = "button";
++    button.className = "version-button";
++    button.textContent = item.label || `Version ${index + 1}`;
++    button.setAttribute("aria-pressed", String(index === state.activeVersionIndex));
++    button.addEventListener("click", () => {
++      state.activeVersionIndex = index;
++      renderOverlay();
++    });
++    return button;
++  }));
++
++  overlayVideo.pause();
++  overlayVideo.src = version.src;
++  overlayVideo.poster = video.poster;
++  const track = overlayVideo.querySelector("track");
++  if (track) {
++    track.src = version.captions || "";
++  }
++  overlayVideo.load();
++}
++
++function closeOverlay() {
++  if (!overlay) {
++    return;
++  }
++
++  overlay.classList.remove("is-visible");
++  document.body.classList.remove("overlay-open");
++  overlayVideo.pause();
++
++  window.setTimeout(() => {
++    overlay.hidden = true;
++    overlayVideo.removeAttribute("src");
++    overlayVideo.load();
++    if (state.lastFocus) {
++      state.lastFocus.focus();
++    }
++  }, prefersReducedMotion() ? 0 : 260);
++}
++
++function handleKeys(event) {
++  if (!introDismissed && introScreen && !introScreen.hidden) {
++    handleIntroKeys(event);
++    return;
++  }
++
++  if (event.key === "Escape" && overlay && !overlay.hidden) {
++    closeOverlay();
++    return;
++  }
++
++  if (event.key === "Tab" && overlay && !overlay.hidden) {
++    trapFocus(event);
++  }
++}
++
++function trapFocus(event) {
++  const focusable = overlay.querySelectorAll(
++    'a[href], button:not([disabled]), video[controls], [tabindex]:not([tabindex="-1"])'
++  );
++  const first = focusable[0];
++  const last = focusable[focusable.length - 1];
++
++  if (!first || !last) {
++    return;
++  }
++
++  if (event.shiftKey && document.activeElement === first) {
++    event.preventDefault();
++    last.focus();
++  } else if (!event.shiftKey && document.activeElement === last) {
++    event.preventDefault();
++    first.focus();
++  }
++}
++
++function prefersReducedMotion() {
++  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++}
+diff --git a/index.html b/index.html
+index e69de29..ade8aa0 100644
+--- a/index.html
++++ b/index.html
+@@ -0,0 +1,81 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="utf-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++    <meta name="description" content="Makurama is a collection of changing video essays inspired by Sei Shonagon.">
++    <title>Makurama</title>
++    <link rel="preconnect" href="https://fonts.googleapis.com">
++    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=IBM+Plex+Mono:wght@400;500;600&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
++    <link rel="stylesheet" href="assets/css/style.css">
++    <script src="assets/js/app.js" defer></script>
++  </head>
++  <body>
++    <a class="skip-link" href="#main">Skip to content</a>
++
++    <section id="intro-screen" role="region" aria-label="Introductory quote" tabindex="0">
++      <blockquote>
++        <p>Things that pass through a small screen and remain.</p>
++      </blockquote>
++    </section>
++
++    <header class="site-header">
++      <p class="lofi-mark">PAL / iPod / subtitles</p>
++      <h1 id="site-title" class="site-title">Makurama</h1>
++      <nav aria-label="Primary navigation">
++        <a href="info.html">Info</a>
++      </nav>
++    </header>
++
++    <main id="main" tabindex="-1">
++      <section class="filter-section" aria-labelledby="filters-title">
++        <h2 id="filters-title" class="visually-hidden">Filter video essays by tag</h2>
++        <div id="tagFilters" class="tag-filters" role="list" aria-live="polite"></div>
++      </section>
++
++      <section class="gallery-section" aria-labelledby="gallery-title">
++        <h2 id="gallery-title" class="visually-hidden">Video essays</h2>
++        <div id="gallery" class="gallery" aria-live="polite"></div>
++        <p id="galleryStatus" class="gallery-status" role="status"></p>
++      </section>
++
++      <section id="textFallback" class="text-fallback" aria-labelledby="text-fallback-title">
++        <h2 id="text-fallback-title">Text version</h2>
++        <p>Makurama can be browsed as a plain list of video essays. Each entry is prepared for captions and transcripts as the project grows.</p>
++        <ul>
++          <li><a href="assets/video/mornings-v1.mp4">Mornings</a>: Things I like, Fresh feelings.</li>
++          <li><a href="assets/video/commuting-v1.mp4">Commuting</a>: Things that pass by, City murmurs.</li>
++          <li><a href="assets/video/small-rooms-v1.mp4">Small Rooms</a>: Private corners, Quiet arrangements.</li>
++        </ul>
++      </section>
++    </main>
++
++    <div id="videoOverlay" class="video-overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle" hidden>
++      <div class="overlay-plane" data-close-overlay></div>
++      <div class="video-dialog">
++        <button class="close-button" type="button" data-close-overlay aria-label="Close video">x</button>
++        <p id="overlayTagline" class="lofi-mark"></p>
++        <h2 id="overlayTitle"></h2>
++        <p id="overlayDescription" class="overlay-description"></p>
++        <div id="versionSwitcher" class="version-switcher" aria-label="Video versions"></div>
++        <video id="overlayVideo" controls playsinline preload="metadata">
++          <track kind="captions" srclang="en" label="English captions">
++        </video>
++        <p id="overlayTranscript" class="transcript-note"></p>
++      </div>
++    </div>
++
++    <noscript>
++      <section class="noscript-fallback" aria-labelledby="noscript-title">
++        <h2 id="noscript-title">Makurama without JavaScript</h2>
++        <p>The interactive gallery needs JavaScript. The first sample paths are listed here for text and script-free browsing.</p>
++        <ul>
++          <li><a href="assets/video/mornings-v1.mp4">Mornings</a></li>
++          <li><a href="assets/video/commuting-v1.mp4">Commuting</a></li>
++          <li><a href="assets/video/small-rooms-v1.mp4">Small Rooms</a></li>
++        </ul>
++      </section>
++    </noscript>
++  </body>
++</html>
