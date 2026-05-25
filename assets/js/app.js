@@ -17,7 +17,6 @@ const overlayVideo = document.querySelector("#overlayVideo");
 const overlayTranscript = document.querySelector("#overlayTranscript");
 const versionSwitcher = document.querySelector("#versionSwitcher");
 const introScreen = document.getElementById("intro-screen");
-const mainContent = document.getElementById("main");
 
 const textOnlyPattern = /Lynx|Links|w3m|ELinks/i;
 let introDismissed = false;

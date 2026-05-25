@@ -108,7 +108,9 @@ button {
   visibility: visible;
   pointer-events: auto;
   cursor: pointer;
-  transition: opacity 1200ms ease;
+  transition-property: opacity;
+  transition-duration: 1200ms;
+  transition-timing-function: ease;
 }
 
 #intro-screen.intro-dismissing {
@@ -154,6 +156,7 @@ button {
 .site-header h1:focus-visible {
   color: var(--ink);
   background: transparent;
+  box-shadow: none;
 }
 
 .site-title {
@@ -433,68 +436,4 @@ main {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
   }
-}
-
-/* --- Makurama debug stabilization: intro, focus, title --- */
-
-#intro-screen {
-  opacity: 1;
-  pointer-events: auto;
-  transition-property: opacity;
-  transition-duration: 1200ms;
-  transition-timing-function: ease;
-}
-
-#intro-screen.intro-dismissing {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-#intro-screen[hidden] {
-  display: none !important;
-  pointer-events: none !important;
-}
-
-.site-title,
-.site-title:focus,
-.site-title:active,
-.site-title:focus-visible,
-#site-title,
-#site-title:focus,
-#site-title:active,
-#site-title:focus-visible {
-  background: transparent !important;
-  color: var(--ink) !important;
-  box-shadow: none !important;
-}
-
-.site-title:focus,
-.site-title:active,
-.site-title:focus-visible,
-#site-title:focus,
-#site-title:active,
-#site-title:focus-visible {
-  outline: none !important;
-}
-
-html,
-body {
-  cursor: auto !important;
-}
-
-a,
-button,
-.card-button,
-[role="button"] {
-  cursor: pointer;
-}
-
-.video-overlay:not(.is-visible) {
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-.video-overlay.is-visible {
-  visibility: visible !important;
-  pointer-events: auto !important;
 }
