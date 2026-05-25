@@ -1,0 +1,20 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# temporary media processing
+tmp/
+*.log
+
+# local notes
+LOCAL_NOTES.md
