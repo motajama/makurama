@@ -1,0 +1,55 @@
+{
+  "videos": [
+    {
+      "id": "mornings",
+      "title": "Mornings",
+      "description": "A short list of pale kitchen sounds, small lamps, and the first messages left unread.",
+      "poster": "assets/poster/mornings.jpg",
+      "tags": ["Things I like", "Fresh feelings"],
+      "versions": [
+        {
+          "id": "mornings-v1",
+          "label": "PAL version 1",
+          "date": "2026-05-25",
+          "src": "assets/video/mornings-v1.mp4",
+          "captions": "assets/video/mornings-v1.vtt",
+          "transcript": "Transcript placeholder for Mornings."
+        }
+      ]
+    },
+    {
+      "id": "commuting",
+      "title": "Commuting",
+      "description": "Windows, station tiles, delay announcements, and things that briefly become scenery.",
+      "poster": "assets/poster/commuting.jpg",
+      "tags": ["Things that pass by", "City murmurs"],
+      "versions": [
+        {
+          "id": "commuting-v1",
+          "label": "PAL version 1",
+          "date": "2026-05-25",
+          "src": "assets/video/commuting-v1.mp4",
+          "captions": "assets/video/commuting-v1.vtt",
+          "transcript": "Transcript placeholder for Commuting."
+        }
+      ]
+    },
+    {
+      "id": "small-rooms",
+      "title": "Small Rooms",
+      "description": "Corners, shelf dust, reflected screens, and the comfort of a room that is almost too narrow.",
+      "poster": "assets/poster/small-rooms.jpg",
+      "tags": ["Private corners", "Quiet arrangements"],
+      "versions": [
+        {
+          "id": "small-rooms-v1",
+          "label": "PAL version 1",
+          "date": "2026-05-25",
+          "src": "assets/video/small-rooms-v1.mp4",
+          "captions": "assets/video/small-rooms-v1.vtt",
+          "transcript": "Transcript placeholder for Small Rooms."
+        }
+      ]
+    }
+  ]
+}
