@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "TerminusLocal";
+  src: url("../fonts/terminus/TerminusTTF-4.49.3.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --paper: #fff;
   --ink: #111;
@@ -5,14 +11,19 @@
   --line: #d7d7d7;
   --soft: #f3f3f3;
   --red: #b11226;
-  --focus: #d21f3c;
-  --title-font: "Shippori Mincho", "Times New Roman", serif;
+  --focus: #b11226;
+  --title-font: "Syne Tactile", "Shippori Mincho", serif;
   --ui-font: "IBM Plex Mono", "Courier New", monospace;
-  --accent-font: "DotGothic16", "IBM Plex Mono", monospace;
+  --accent-font: "TerminusLocal", "Terminus", "Terminus (TTF)", "VT323", "IBM Plex Mono", monospace;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  cursor: auto;
 }
 
 html {
@@ -40,6 +51,13 @@ a {
   text-decoration-color: var(--red);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
+}
+
+a,
+button,
+.card-button,
+[role="button"] {
+  cursor: pointer;
 }
 
 button,
@@ -93,15 +111,23 @@ button {
   background: var(--paper);
   color: var(--ink);
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   cursor: pointer;
-  transition: opacity 1200ms ease;
+  transition-property: opacity;
+  transition-duration: 1600ms;
+  transition-timing-function: ease;
 }
 
 #intro-screen.intro-dismissing,
 #intro-screen.intro-hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+#intro-screen[hidden],
+.video-overlay[hidden] {
+  display: none !important;
 }
 
 #intro-screen blockquote {
@@ -124,6 +150,7 @@ button {
   gap: 1rem;
   padding: 2rem 1.25rem 2.5rem;
   text-align: center;
+  background: transparent;
 }
 
 .compact-header {
@@ -152,6 +179,7 @@ button {
 .site-header h1:focus-visible {
   color: var(--ink);
   background: transparent;
+  box-shadow: none;
 }
 
 .site-title:focus {
@@ -171,6 +199,7 @@ button {
 .lofi-mark {
   margin: 0;
   color: var(--red);
+  background: transparent;
   font-family: var(--accent-font);
   font-size: 0.82rem;
   letter-spacing: 0;
@@ -191,6 +220,7 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55rem;
+  font-family: var(--accent-font);
 }
 
 .tag-button,
@@ -205,6 +235,7 @@ main {
 .tag-button,
 .version-button {
   padding: 0.55rem 0.8rem;
+  font-family: var(--accent-font);
   font-size: 0.78rem;
   text-transform: uppercase;
 }
@@ -291,6 +322,7 @@ main {
 .noscript-fallback,
 .text-fallback {
   color: var(--muted);
+  font-family: var(--accent-font);
   font-size: 0.78rem;
   line-height: 1.7;
 }
@@ -325,11 +357,15 @@ main {
   place-items: center;
   padding: 1rem;
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   transition: opacity 260ms ease;
 }
 
 .video-overlay.is-visible {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .overlay-plane {

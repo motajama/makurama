@@ -17,13 +17,11 @@ const overlayDescription = document.querySelector("#overlayDescription");
 const overlayVideo = document.querySelector("#overlayVideo");
 const overlayTranscript = document.querySelector("#overlayTranscript");
 const versionSwitcher = document.querySelector("#versionSwitcher");
-const introScreen = document.querySelector("#intro-screen");
-const siteTitle = document.querySelector("#site-title");
+const introScreen = document.getElementById("intro-screen");
 
 const textOnlyPattern = /Lynx|Links|w3m|ELinks/i;
 let introDismissed = false;
-let introFinished = false;
-let introAutoTimer = 0;
+let introTimer = 0;
 let introFallbackTimer = 0;
 
 init();
@@ -46,6 +44,76 @@ function init() {
   document.addEventListener("keydown", handleKeys);
 }
 
+function setupIntro() {
+  if (!introScreen) {
+    document.body.classList.remove("intro-active");
+    return;
+  }
+
+  document.body.classList.add("intro-active");
+  introScreen.hidden = false;
+  introScreen.classList.remove("intro-dismissing");
+  introScreen.style.pointerEvents = "";
+  introScreen.focus({ preventScroll: true });
+  introScreen.addEventListener("click", dismissIntro);
+  introScreen.addEventListener("keydown", handleIntroKeys);
+  introTimer = window.setTimeout(dismissIntro, 4000);
+}
+
+function handleIntroKeys(event) {
+  if (!["Enter", " ", "Escape"].includes(event.key)) {
+    return;
+  }
+
+  event.preventDefault();
+  dismissIntro();
+}
+
+function dismissIntro() {
+  if (!introScreen || introDismissed) {
+    return;
+  }
+
+  introDismissed = true;
+  window.clearTimeout(introTimer);
+  window.clearTimeout(introFallbackTimer);
+  document.body.classList.remove("intro-active");
+  introScreen.classList.add("intro-dismissing");
+  introScreen.style.pointerEvents = "none";
+  introScreen.removeEventListener("click", dismissIntro);
+  introScreen.removeEventListener("keydown", handleIntroKeys);
+
+  /*
+   Do not move focus to main/title after the intro.
+   That made the title look permanently active/red in this prototype.
+   Blur the intro layer and let the user continue naturally.
+  */
+  if (document.activeElement && typeof document.activeElement.blur === "function") {
+    document.activeElement.blur();
+  }
+
+  introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
+  introFallbackTimer = window.setTimeout(finishIntro, 2100);
+}
+
+function handleIntroTransitionEnd(event) {
+  if (event.target !== introScreen || event.propertyName !== "opacity") {
+    return;
+  }
+
+  finishIntro();
+}
+
+function finishIntro() {
+  if (!introScreen) {
+    return;
+  }
+
+  window.clearTimeout(introFallbackTimer);
+  introScreen.removeEventListener("transitionend", handleIntroTransitionEnd);
+  introScreen.hidden = true;
+}
+
 async function loadVideos() {
   try {
     const response = await fetch("assets/data/videos.json");
@@ -61,60 +129,6 @@ async function loadVideos() {
     galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
     console.error(error);
   }
-}
-
-function setupIntro() {
-  if (!introScreen) {
-    document.body.classList.remove("intro-active");
-    return;
-  }
-
-  document.body.classList.add("intro-active");
-  introScreen.focus({ preventScroll: true });
-  introScreen.addEventListener("click", dismissIntro);
-  introScreen.addEventListener("keydown", handleIntroKeys);
-  introAutoTimer = window.setTimeout(dismissIntro, 4000);
-}
-
-function handleIntroKeys(event) {
-  const dismissKeys = ["Enter", " ", "Escape"];
-  if (!dismissKeys.includes(event.key)) {
-    return;
-  }
-
-  event.preventDefault();
-  dismissIntro();
-}
-
-function dismissIntro() {
-  if (introDismissed || !introScreen) {
-    return;
-  }
-
-  introDismissed = true;
-  window.clearTimeout(introAutoTimer);
-  introScreen.classList.add("intro-dismissing");
-  document.body.classList.remove("intro-active");
-  introScreen.removeEventListener("click", dismissIntro);
-  introScreen.removeEventListener("keydown", handleIntroKeys);
-
-  const finish = () => {
-    if (introFinished) {
-      return;
-    }
-
-    introFinished = true;
-    window.clearTimeout(introFallbackTimer);
-    introScreen.hidden = true;
-    if (siteTitle) {
-      siteTitle.focus({ preventScroll: true });
-    } else {
-      document.querySelector("#main")?.focus({ preventScroll: true });
-    }
-  };
-
-  introScreen.addEventListener("transitionend", finish, { once: true });
-  introFallbackTimer = window.setTimeout(finish, prefersReducedMotion() ? 160 : 1400);
 }
 
 function renderTags() {
