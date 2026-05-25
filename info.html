@@ -7,56 +7,89 @@
     <title>Makurama Info</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Dr+Sugiyama&family=IBM+Plex+Mono:wght@400;500;600&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Shippori+Mincho:wght@400;500;700&family=Syne+Tactile&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body class="info-page">
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header compact-header">
-      <p class="lofi-mark">notes / licenses / sources</p>
-      <h1>Makurama</h1>
+      <p class="lofi-mark">Jan Motal's</p>
+      <h1 class="site-title">Makurama<span class="title-dot">.</span></h1>
       <nav aria-label="Primary navigation">
         <a href="index.html">Gallery</a>
       </nav>
     </header>
 
     <main id="main" class="info-main" tabindex="-1">
-      <article class="river-text">
+      <article class="river-text" aria-labelledby="about-title">
+        <h2 id="about-title" class="visually-hidden">About Makurama</h2>
+
         <p>
-          Makurama is a collection of changing video essays inspired by Sei Shonagon:
-          small lists, sharp weather, private pleasures, brief irritations, and the way
-          attention keeps editing itself after a scene is gone.
+          Makurama is a collection of changing video essays after Sei Shonagon:
+          lists, small shocks, private pleasures, public irritations, and the way
+          attention edits a day after the day has already passed.
         </p>
 
         <figure class="info-figure protrude-left">
-          <div class="placeholder-image" role="img" aria-label="Placeholder still from a low resolution video"></div>
-          <figcaption>placeholder still / morning light</figcaption>
+          <div class="placeholder-image" role="img" aria-label="Placeholder still suggesting a low resolution iPod video frame"></div>
+          <figcaption>placeholder still / small screen weather</figcaption>
         </figure>
 
         <p>
-          The videos are recorded on an old iPod, edited, transformed to PAL, and finished
-          with hardcoded subtitles. Their sound world is chiptune, human voice, and occasional
-          ambient concrete sound.
+          The image begins with an old iPod. It is lo-fi because the device is small,
+          tired, and specific. The footage is edited into PAL, held in a 4:3 frame,
+          and finished with hardcoded subtitles so the words become part of the image
+          rather than a removable layer.
         </p>
 
         <p>
-          This is open-source art. The website code, interface, documentation, and data schema
-          are meant to be readable, forkable, and useful to other small web projects without
-          requiring a build system or private platform.
+          The sound is deliberately slight: chiptune, human voice, and occasional
+          ambient concrete sound. A hallway, a train platform, a room tone, a tiny
+          melody. Nothing is polished into distance.
         </p>
 
         <figure class="info-figure protrude-right">
-          <div class="placeholder-image striped" role="img" aria-label="Placeholder PAL texture block"></div>
+          <div class="placeholder-image striped" role="img" aria-label="Placeholder texture suggesting PAL scan lines and red drift"></div>
           <figcaption>placeholder texture / PAL drift</figcaption>
         </figure>
 
         <p>
-          Code, interface, documentation, and schema are released under the MIT License.
-          Videos, voice, subtitles, images, and artistic data are released under
-          CC BY-NC-ND unless a specific item says otherwise.
+          This is open-source art. Here that means the website is not a sealed frame:
+          the code, interface, documentation, and data schema can be read, reused,
+          forked, and criticized. The apparatus remains visible.
+        </p>
+
+        <p>
+          The artworks themselves stay under a different care. Videos, voice,
+          subtitles, images, and artistic data are licensed
+          <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.
+          Code, interface, documentation, and schema are open-source under the
+          <a href="LICENSE">MIT License</a>.
+        </p>
+
+        <p class="river-return">
+          <a href="index.html">Return to the gallery</a>
         </p>
       </article>
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-badges" aria-label="Project links and licenses">
+        <a href="https://github.com/motajama/makurama">
+          <img src="https://img.shields.io/badge/source-GitHub-111111?style=flat-square&amp;logo=github" alt="Source on GitHub">
+        </a>
+        <a href="LICENSE">
+          <img src="https://img.shields.io/badge/code-MIT-111111?style=flat-square" alt="Code licensed MIT">
+        </a>
+        <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+          <img src="https://img.shields.io/badge/art-CC%20BY--NC--ND%204.0-b11226?style=flat-square" alt="Art licensed Creative Commons BY-NC-ND 4.0">
+        </a>
+        <a href="https://github.com/motajama/makurama">
+          <img src="https://img.shields.io/badge/open--source-art-6f6f6f?style=flat-square" alt="Open-source art static site">
+        </a>
+      </div>
+      <p><a href="https://www.janmotal.cz">web&amp;design&rarr;moj</a></p>
+    </footer>
   </body>
 </html>

@@ -1,3 +1,8 @@
+[![Source on GitHub](https://img.shields.io/badge/source-GitHub-111111?style=flat-square&logo=github)](https://github.com/motajama/makurama)
+[![Code licensed MIT](https://img.shields.io/badge/code-MIT-111111?style=flat-square)](LICENSE)
+[![Art licensed CC BY-NC-ND 4.0](https://img.shields.io/badge/art-CC%20BY--NC--ND%204.0-b11226?style=flat-square)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+[![Open-source art](https://img.shields.io/badge/open--source-art-6f6f6f?style=flat-square)](https://github.com/motajama/makurama)
+
 # Makurama
 
 **Makurama** is a collection of changing video essays after Sei Shōnagon.
@@ -21,7 +26,7 @@ through which the work appears.
 
 ## Licensing
 
-Source code, interface, CSS, JavaScript, Python tools, documentation, and JSON schema:
+Source code, interface, CSS, JavaScript, documentation, and JSON schema:
 MIT License.
 
 Videos, voice recordings, subtitles, images, artistic texts, and artistic metadata:
@@ -34,7 +39,6 @@ CC BY-NC-ND 4.0 unless stated otherwise.
 - `assets/data/videos.json` — video metadata, tags, versions
 - `assets/css/style.css` — visual system
 - `assets/js/app.js` — gallery, filtering, video overlay
-- `tools/` — video processing tools
 - `docs/` — notes and documentation
 
 ## Video data
