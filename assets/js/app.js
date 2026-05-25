@@ -77,12 +77,17 @@ function dismissIntro() {
   introScreen.removeEventListener("click", dismissIntro);
   introScreen.removeEventListener("keydown", handleIntroKeys);
 
-  if (mainContent) {
-    mainContent.focus({ preventScroll: true });
+  /*
+   Do not move focus to main/title after the intro.
+   That made the title look permanently active/red in this prototype.
+   Blur the intro layer and let the user continue naturally.
+  */
+  if (document.activeElement && typeof document.activeElement.blur === "function") {
+    document.activeElement.blur();
   }
 
   introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
-  introFallbackTimer = window.setTimeout(finishIntro, prefersReducedMotion() ? 180 : 1500);
+  introFallbackTimer = window.setTimeout(finishIntro, 1600);
 }
 
 function handleIntroTransitionEnd(event) {
