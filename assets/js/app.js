@@ -222,7 +222,7 @@ function renderUiLabels(ui) {
   }
 
   if (closeVideoButton) {
-    closeVideoButton.textContent = ui.close_video_text || "x";
+    closeVideoButton.textContent = ui.close_video_text || "出";
     if (ui.close_video_label) {
       closeVideoButton.setAttribute("aria-label", ui.close_video_label);
     }
@@ -307,6 +307,7 @@ function createTagButton(tag) {
 
 function renderGallery() {
   const videos = getFilteredVideos();
+  gallery.classList.toggle("is-single", videos.length === 1);
   gallery.replaceChildren(...videos.map(createGalleryCard));
   galleryStatus.textContent = videos.length
     ? formatUi(
@@ -337,6 +338,9 @@ function createGalleryCard(video) {
   button.setAttribute("aria-label", formatUi("play_video_label", { title: video.title }, `Play ${video.title}`));
   button.addEventListener("click", () => openOverlay(video));
 
+  const posterFrame = document.createElement("span");
+  posterFrame.className = "card-poster";
+
   const poster = document.createElement("img");
   poster.src = video.poster;
   poster.alt = video.alt || "";
@@ -345,6 +349,7 @@ function createGalleryCard(video) {
     poster.removeAttribute("src");
     poster.classList.add("is-missing");
   });
+  posterFrame.append(poster);
 
   const content = document.createElement("span");
   content.className = "card-content";
@@ -370,7 +375,7 @@ function createGalleryCard(video) {
     content.append(subtitle);
   }
   content.append(description, tags);
-  button.append(poster, content);
+  button.append(posterFrame, content);
   card.append(button);
   return card;
 }
@@ -536,7 +541,7 @@ function closeOverlay() {
     if (state.lastFocus) {
       state.lastFocus.focus();
     }
-  }, prefersReducedMotion() ? 0 : 260);
+  }, prefersReducedMotion() ? 0 : 360);
 }
 
 function handleKeys(event) {

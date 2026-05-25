@@ -13,11 +13,12 @@ __pycache__/
 venv/
 
 .codex
-video/
 
 # temporary media processing
 tmp/
 *.log
+assets/video
+assets/poster
 
 # local notes
 LOCAL_NOTES.md
