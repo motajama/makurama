@@ -9,6 +9,7 @@ const state = {
 const tagFilters = document.querySelector("#tagFilters");
 const gallery = document.querySelector("#gallery");
 const galleryStatus = document.querySelector("#galleryStatus");
+const textFallback = document.querySelector("#textFallback");
 const overlay = document.querySelector("#videoOverlay");
 const overlayTitle = document.querySelector("#overlayTitle");
 const overlayTagline = document.querySelector("#overlayTagline");
@@ -16,96 +17,33 @@ const overlayDescription = document.querySelector("#overlayDescription");
 const overlayVideo = document.querySelector("#overlayVideo");
 const overlayTranscript = document.querySelector("#overlayTranscript");
 const versionSwitcher = document.querySelector("#versionSwitcher");
-const introScreen = document.getElementById("intro-screen");
-const mainContent = document.getElementById("main");
+const introScreen = document.querySelector("#intro-screen");
+const siteTitle = document.querySelector("#site-title");
 
 const textOnlyPattern = /Lynx|Links|w3m|ELinks/i;
 let introDismissed = false;
-let introTimer = 0;
+let introFinished = false;
+let introAutoTimer = 0;
 let introFallbackTimer = 0;
 
 init();
 
 function init() {
   setupIntro();
-  setupVideoOverlay();
 
   if (textOnlyPattern.test(navigator.userAgent)) {
     document.documentElement.classList.add("text-only");
   }
 
   loadVideos();
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target.matches("[data-close-overlay]")) {
+      closeOverlay();
+    }
+  });
+
   document.addEventListener("keydown", handleKeys);
-}
-
-function setupIntro() {
-  if (!introScreen) {
-    document.body.classList.remove("intro-active");
-    return;
-  }
-
-  document.body.classList.add("intro-active");
-  introScreen.hidden = false;
-  introScreen.classList.remove("intro-dismissing");
-  introScreen.style.pointerEvents = "";
-  introScreen.focus({ preventScroll: true });
-  introScreen.addEventListener("click", dismissIntro);
-  introScreen.addEventListener("keydown", handleIntroKeys);
-  introTimer = window.setTimeout(dismissIntro, 4000);
-}
-
-function handleIntroKeys(event) {
-  if (!["Enter", " ", "Escape"].includes(event.key)) {
-    return;
-  }
-
-  event.preventDefault();
-  dismissIntro();
-}
-
-function dismissIntro() {
-  if (!introScreen || introDismissed) {
-    return;
-  }
-
-  introDismissed = true;
-  window.clearTimeout(introTimer);
-  window.clearTimeout(introFallbackTimer);
-  document.body.classList.remove("intro-active");
-  introScreen.classList.add("intro-dismissing");
-  introScreen.style.pointerEvents = "none";
-  introScreen.removeEventListener("click", dismissIntro);
-  introScreen.removeEventListener("keydown", handleIntroKeys);
-
-  /*
-   Do not move focus to main/title after the intro.
-   That made the title look permanently active/red in this prototype.
-   Blur the intro layer and let the user continue naturally.
-  */
-  if (document.activeElement && typeof document.activeElement.blur === "function") {
-    document.activeElement.blur();
-  }
-
-  introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
-  introFallbackTimer = window.setTimeout(finishIntro, 1600);
-}
-
-function handleIntroTransitionEnd(event) {
-  if (event.target !== introScreen || event.propertyName !== "opacity") {
-    return;
-  }
-
-  finishIntro();
-}
-
-function finishIntro() {
-  if (!introScreen) {
-    return;
-  }
-
-  window.clearTimeout(introFallbackTimer);
-  introScreen.removeEventListener("transitionend", handleIntroTransitionEnd);
-  introScreen.hidden = true;
 }
 
 async function loadVideos() {
@@ -120,32 +58,66 @@ async function loadVideos() {
     renderTags();
     renderGallery();
   } catch (error) {
-    if (galleryStatus) {
-      galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
-    }
+    galleryStatus.textContent = "The video list could not be loaded. Use the text version below.";
     console.error(error);
   }
 }
 
-function setupVideoOverlay() {
-  if (!overlay) {
+function setupIntro() {
+  if (!introScreen) {
+    document.body.classList.remove("intro-active");
     return;
   }
 
-  overlay.hidden = true;
-  overlay.classList.remove("is-visible");
-  overlay.addEventListener("click", (event) => {
-    if (event.target.matches("[data-close-overlay]")) {
-      closeOverlay();
+  document.body.classList.add("intro-active");
+  introScreen.focus({ preventScroll: true });
+  introScreen.addEventListener("click", dismissIntro);
+  introScreen.addEventListener("keydown", handleIntroKeys);
+  introAutoTimer = window.setTimeout(dismissIntro, 4000);
+}
+
+function handleIntroKeys(event) {
+  const dismissKeys = ["Enter", " ", "Escape"];
+  if (!dismissKeys.includes(event.key)) {
+    return;
+  }
+
+  event.preventDefault();
+  dismissIntro();
+}
+
+function dismissIntro() {
+  if (introDismissed || !introScreen) {
+    return;
+  }
+
+  introDismissed = true;
+  window.clearTimeout(introAutoTimer);
+  introScreen.classList.add("intro-dismissing");
+  document.body.classList.remove("intro-active");
+  introScreen.removeEventListener("click", dismissIntro);
+  introScreen.removeEventListener("keydown", handleIntroKeys);
+
+  const finish = () => {
+    if (introFinished) {
+      return;
     }
-  });
+
+    introFinished = true;
+    window.clearTimeout(introFallbackTimer);
+    introScreen.hidden = true;
+    if (siteTitle) {
+      siteTitle.focus({ preventScroll: true });
+    } else {
+      document.querySelector("#main")?.focus({ preventScroll: true });
+    }
+  };
+
+  introScreen.addEventListener("transitionend", finish, { once: true });
+  introFallbackTimer = window.setTimeout(finish, prefersReducedMotion() ? 160 : 1400);
 }
 
 function renderTags() {
-  if (!tagFilters) {
-    return;
-  }
-
   const tags = ["All", ...new Set(state.videos.flatMap((video) => video.tags || []))];
   tagFilters.replaceChildren(...tags.map(createTagButton));
 }
@@ -166,17 +138,11 @@ function createTagButton(tag) {
 }
 
 function renderGallery() {
-  if (!gallery) {
-    return;
-  }
-
   const videos = getFilteredVideos();
   gallery.replaceChildren(...videos.map(createGalleryCard));
-  if (galleryStatus) {
-    galleryStatus.textContent = videos.length
-      ? `${videos.length} video essay${videos.length === 1 ? "" : "s"} shown.`
-      : "No video essays match this tag.";
-  }
+  galleryStatus.textContent = videos.length
+    ? `${videos.length} video essay${videos.length === 1 ? "" : "s"} shown.`
+    : "No video essays match this tag.";
 }
 
 function getFilteredVideos() {
@@ -227,20 +193,14 @@ function createGalleryCard(video) {
 }
 
 function openOverlay(video, versionIndex = 0) {
-  if (!overlay) {
-    return;
-  }
-
   state.lastFocus = document.activeElement;
   state.activeVideo = video;
   state.activeVersionIndex = versionIndex;
   renderOverlay();
   overlay.hidden = false;
   document.body.classList.add("overlay-open");
-  requestAnimationFrame(() => {
-    overlay.classList.add("is-visible");
-  });
-  overlay.querySelector(".close-button")?.focus();
+  requestAnimationFrame(() => overlay.classList.add("is-visible"));
+  overlay.querySelector(".close-button").focus();
 }
 
 function renderOverlay() {
@@ -276,10 +236,6 @@ function renderOverlay() {
 }
 
 function closeOverlay() {
-  if (!overlay) {
-    return;
-  }
-
   overlay.classList.remove("is-visible");
   document.body.classList.remove("overlay-open");
   overlayVideo.pause();
@@ -300,12 +256,12 @@ function handleKeys(event) {
     return;
   }
 
-  if (event.key === "Escape" && overlay && !overlay.hidden) {
+  if (event.key === "Escape" && !overlay.hidden) {
     closeOverlay();
     return;
   }
 
-  if (event.key === "Tab" && overlay && !overlay.hidden) {
+  if (event.key === "Tab" && !overlay.hidden) {
     trapFocus(event);
   }
 }

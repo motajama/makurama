@@ -5,7 +5,7 @@
   --line: #d7d7d7;
   --soft: #f3f3f3;
   --red: #b11226;
-  --focus: #b11226;
+  --focus: #d21f3c;
   --title-font: "Shippori Mincho", "Times New Roman", serif;
   --ui-font: "IBM Plex Mono", "Courier New", monospace;
   --accent-font: "DotGothic16", "IBM Plex Mono", monospace;
@@ -13,11 +13,6 @@
 
 * {
   box-sizing: border-box;
-}
-
-html,
-body {
-  cursor: auto;
 }
 
 html {
@@ -45,13 +40,6 @@ a {
   text-decoration-color: var(--red);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
-}
-
-a,
-button,
-.card-button,
-[role="button"] {
-  cursor: pointer;
 }
 
 button,
@@ -84,7 +72,7 @@ button {
   position: fixed;
   left: 1rem;
   top: 1rem;
-  z-index: 10000;
+  z-index: 20;
   padding: 0.65rem 0.85rem;
   background: var(--paper);
   border: 1px solid var(--ink);
@@ -105,20 +93,15 @@ button {
   background: var(--paper);
   color: var(--ink);
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
   cursor: pointer;
   transition: opacity 1200ms ease;
 }
 
-#intro-screen.intro-dismissing {
+#intro-screen.intro-dismissing,
+#intro-screen.intro-hidden {
   opacity: 0;
   pointer-events: none;
-}
-
-#intro-screen[hidden],
-.video-overlay[hidden] {
-  display: none !important;
 }
 
 #intro-screen blockquote {
@@ -141,6 +124,21 @@ button {
   gap: 1rem;
   padding: 2rem 1.25rem 2.5rem;
   text-align: center;
+}
+
+.compact-header {
+  padding-bottom: 1rem;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-family: var(--title-font);
+  font-size: clamp(4.4rem, 16vw, 12rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
   background: transparent;
 }
 
@@ -156,19 +154,12 @@ button {
   background: transparent;
 }
 
-.site-title {
-  margin: 0;
-  font-family: var(--title-font);
-  font-size: clamp(4.4rem, 16vw, 12rem);
-  font-weight: 500;
-  line-height: 0.9;
-  letter-spacing: 0;
-  text-transform: none;
+.site-title:focus {
+  outline: none;
 }
 
-.site-title:focus,
 .site-title:focus-visible {
-  outline: 1px solid var(--focus);
+  outline: 1px solid var(--red);
   outline-offset: 0.35rem;
 }
 
@@ -180,7 +171,6 @@ button {
 .lofi-mark {
   margin: 0;
   color: var(--red);
-  background: transparent;
   font-family: var(--accent-font);
   font-size: 0.82rem;
   letter-spacing: 0;
@@ -209,6 +199,7 @@ main {
   min-height: 2.5rem;
   border: 1px solid var(--line);
   background: var(--paper);
+  cursor: pointer;
 }
 
 .tag-button,
@@ -251,6 +242,7 @@ main {
   border: 0;
   background: var(--paper);
   text-align: left;
+  cursor: pointer;
 }
 
 .card-button:hover .card-title,
@@ -333,15 +325,11 @@ main {
   place-items: center;
   padding: 1rem;
   opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
   transition: opacity 260ms ease;
 }
 
 .video-overlay.is-visible {
   opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
 }
 
 .overlay-plane {
@@ -410,8 +398,60 @@ main {
   border: 1px solid var(--line);
 }
 
+.info-main {
+  padding-top: 1rem;
+}
+
+.river-text {
+  max-width: 34rem;
+  margin: 0 auto;
+  font-family: var(--title-font);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  line-height: 1.65;
+}
+
+.river-text p {
+  margin: 0 0 2.5rem;
+}
+
+.info-figure {
+  width: min(18rem, 62vw);
+  margin: 0 0 2.5rem;
+  font-family: var(--ui-font);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.protrude-left {
+  transform: translateX(-18%);
+}
+
+.protrude-right {
+  margin-left: auto;
+  transform: translateX(18%);
+}
+
+.placeholder-image {
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(177, 18, 38, 0.12), transparent 30%),
+    repeating-linear-gradient(0deg, #eee 0 2px, #fff 2px 7px);
+}
+
+.placeholder-image.striped {
+  background:
+    linear-gradient(90deg, rgba(177, 18, 38, 0.16), transparent 36%),
+    repeating-linear-gradient(90deg, #111 0 1px, #f7f7f7 1px 9px);
+}
+
+.info-figure figcaption {
+  margin-top: 0.6rem;
+}
+
 @media (max-width: 640px) {
-  .site-title {
+  .site-header h1 {
     font-size: clamp(4rem, 22vw, 7rem);
   }
 
@@ -419,82 +459,24 @@ main {
   .card-button {
     min-height: 21rem;
   }
+
+  .protrude-left,
+  .protrude-right {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #intro-screen {
-    transition-duration: 80ms;
+    transition-duration: 80ms !important;
   }
 
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
   }
-}
-
-/* --- Makurama debug stabilization: intro, focus, title --- */
-
-#intro-screen {
-  opacity: 1;
-  pointer-events: auto;
-  transition-property: opacity;
-  transition-duration: 1200ms;
-  transition-timing-function: ease;
-}
-
-#intro-screen.intro-dismissing {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-#intro-screen[hidden] {
-  display: none !important;
-  pointer-events: none !important;
-}
-
-.site-title,
-.site-title:focus,
-.site-title:active,
-.site-title:focus-visible,
-#site-title,
-#site-title:focus,
-#site-title:active,
-#site-title:focus-visible {
-  background: transparent !important;
-  color: var(--ink) !important;
-  box-shadow: none !important;
-}
-
-.site-title:focus,
-.site-title:active,
-.site-title:focus-visible,
-#site-title:focus,
-#site-title:active,
-#site-title:focus-visible {
-  outline: none !important;
-}
-
-html,
-body {
-  cursor: auto !important;
-}
-
-a,
-button,
-.card-button,
-[role="button"] {
-  cursor: pointer;
-}
-
-.video-overlay:not(.is-visible) {
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-.video-overlay.is-visible {
-  visibility: visible !important;
-  pointer-events: auto !important;
 }
