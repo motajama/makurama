@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "TerminusLocal";
+  src: url("../fonts/terminus/TerminusTTF-4.49.3.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --paper: #fff;
   --ink: #111;
@@ -6,9 +12,9 @@
   --soft: #f3f3f3;
   --red: #b11226;
   --focus: #b11226;
-  --title-font: "Shippori Mincho", "Times New Roman", serif;
+  --title-font: "Syne Tactile", "Shippori Mincho", serif;
   --ui-font: "IBM Plex Mono", "Courier New", monospace;
-  --accent-font: "DotGothic16", "IBM Plex Mono", monospace;
+  --accent-font: "TerminusLocal", "Terminus", "Terminus (TTF)", "VT323", "IBM Plex Mono", monospace;
 }
 
 * {
@@ -109,7 +115,7 @@ button {
   pointer-events: auto;
   cursor: pointer;
   transition-property: opacity;
-  transition-duration: 1200ms;
+  transition-duration: 1600ms;
   transition-timing-function: ease;
 }
 
@@ -204,6 +210,7 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55rem;
+  font-family: var(--accent-font);
 }
 
 .tag-button,
@@ -217,6 +224,7 @@ main {
 .tag-button,
 .version-button {
   padding: 0.55rem 0.8rem;
+  font-family: var(--accent-font);
   font-size: 0.78rem;
   text-transform: uppercase;
 }
@@ -302,6 +310,7 @@ main {
 .noscript-fallback,
 .text-fallback {
   color: var(--muted);
+  font-family: var(--accent-font);
   font-size: 0.78rem;
   line-height: 1.7;
 }

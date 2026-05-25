@@ -86,7 +86,7 @@ function dismissIntro() {
   }
 
   introScreen.addEventListener("transitionend", handleIntroTransitionEnd);
-  introFallbackTimer = window.setTimeout(finishIntro, 1600);
+  introFallbackTimer = window.setTimeout(finishIntro, 2100);
 }
 
 function handleIntroTransitionEnd(event) {
